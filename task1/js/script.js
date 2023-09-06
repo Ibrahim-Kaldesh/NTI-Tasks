@@ -1,34 +1,19 @@
 // const addUser = document.getElementById("addUser")
 let allUsers = [];
 const addUser = document.querySelector("#addUser");
+const editUser = document.querySelector("#edit-user");
 const showAll = document.querySelector("#showAll");
 const formHeaders = ["id", "userName", "email", "age", "status"];
 const dataWrap = document.querySelector("#dataWrap");
 const single = document.querySelector("#single");
+const modal = document.querySelector(".modal");
+const close = document.querySelector("#close");
+const closeIcon = document.querySelector(".close");
+const saveChanges = document.querySelector("#save-changes");
 
-// handle Edit Function
-const handleEdit = function () {
-  let choice;
-  do {
-    choice = prompt(`Enter the number of the choice you want to edit
-      1 : Name
-      2 : Email
-      3 : Age
-      0 : Exit`);
-    switch (choice) {
-      case "1":
-        usersData[index].userName = prompt("new user name , please : ");
-        break;
-      case "2":
-        usersData[index].email = prompt("new email, please : ");
-        break;
-      case "3":
-        usersData[index].age = prompt("new age, please : ");
-        break;
-      default:
-        break;
-    }
-  } while (choice !== "0");
+// handle modal
+const handleModal = function (display) {
+  modal.style.display = display;
 };
 
 // handle status of the user
@@ -42,7 +27,6 @@ const handleStatusBtn = function (class1, class2, state, msg, user) {
 const createUserObj = function (formData) {
   const user = {};
   formHeaders.forEach((h) => {
-    console.log(user[h]);
     if (h === "id") user[h] = Date.now();
     else if (h === "status") user[h] = 0;
     else user[h] = formData[h].value;
@@ -133,8 +117,36 @@ const drawall = function (usersData) {
       window.location = "single.html";
     });
 
+    close.addEventListener("click", function (e) {
+      handleModal("none");
+    });
+
+    closeIcon.addEventListener("click", function (e) {
+      handleModal("none");
+    });
+
     editBtn.addEventListener("click", function () {
-      storeToLocalStorage("myUsers", usersData);
+      handleModal("block");
+      const inputs = editUser.elements;
+      formHeaders.forEach((h) => {
+        if (inputs[h]) {
+          inputs[h].value = usersData[index][h];
+        }
+      });
+      saveChanges.addEventListener("click", function (e) {
+        e.preventDefault();
+        const fields = Array.from(tr.childNodes).slice(1, -1);
+        const l = fields.length;
+        formHeaders.slice(1).forEach((h, idx) => {
+          if (inputs[h]) {
+            usersData[index][h] = inputs[h].value || usersData[index][h];
+            if (idx < l) fields[idx].textContent = usersData[index][h];
+          }
+        });
+
+        storeToLocalStorage("myUsers", usersData);
+        handleModal("none");
+      });
     });
 
     statusBtn.addEventListener("click", function () {
