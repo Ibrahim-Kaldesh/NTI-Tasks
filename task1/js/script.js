@@ -6,6 +6,32 @@ const formHeaders = ["id", "userName", "email", "age", "status"];
 const dataWrap = document.querySelector("#dataWrap");
 const single = document.querySelector("#single");
 
+// handle Edit Function
+const handleEdit = function () {
+  let choice;
+  do {
+    choice = prompt(`Enter the number of the choice you want to edit
+      1 : Name
+      2 : Email
+      3 : Age
+      0 : Exit`);
+    switch (choice) {
+      case "1":
+        usersData[index].userName = prompt("new user name , please : ");
+        break;
+      case "2":
+        usersData[index].email = prompt("new email, please : ");
+        break;
+      case "3":
+        usersData[index].age = prompt("new age, please : ");
+        break;
+      default:
+        break;
+    }
+  } while (choice !== "0");
+};
+
+// handle status of the user
 const handleStatusBtn = function (class1, class2, state, msg, user) {
   this.textContent = msg;
   this.classList.remove(class1);
@@ -45,14 +71,6 @@ if (addUser) {
     window.location = "index.html";
   });
 }
-
-// showAll.addEventListener("click", function(e){
-//     allUsers.forEach( ( user, index ) => {
-//         data = `${index} - `
-//         formHeaders.forEach( h => data += user[h]+" - ")
-//         console.log(data)
-//     })
-// })
 
 const createMyOwnEle = function (parent, ele, txt, classes) {
   let myEle = document.createElement(ele);
@@ -100,7 +118,7 @@ const drawall = function (usersData) {
       td,
       "button",
       usersData[index].status ? "deactivate" : "activate",
-      `btn btn-${usersData[index].status ? "success" : "danger"} mx-2`
+      `btn btn-${usersData[index].status ? "success" : "secondary"} mx-2`
     );
 
     delBtn.addEventListener("click", function (e) {
@@ -116,36 +134,14 @@ const drawall = function (usersData) {
     });
 
     editBtn.addEventListener("click", function () {
-      let choice;
-      do {
-        choice = prompt(`Enter the number of choice you want to edit
-      1 : Name
-      2 : Email
-      3 : Age
-      0 : Exit`);
-        switch (choice) {
-          case "1":
-            usersData[index].userName = prompt("new user name , please : ");
-            break;
-          case "2":
-            usersData[index].email = prompt("new email, please : ");
-            break;
-          case "3":
-            usersData[index].age = prompt("new age, please : ");
-            break;
-          default:
-            break;
-        }
-      } while (choice !== "0");
-
       storeToLocalStorage("myUsers", usersData);
     });
 
     statusBtn.addEventListener("click", function () {
-      this.classList.contains("btn-danger")
+      this.classList.contains("btn-secondary")
         ? handleStatusBtn.call(
             this,
-            "btn-danger",
+            "btn-secondary",
             "btn-success",
             1,
             "deactivate",
@@ -154,7 +150,7 @@ const drawall = function (usersData) {
         : handleStatusBtn.call(
             this,
             "btn-success",
-            "btn-danger",
+            "btn-secondary",
             0,
             "activate",
             usersData[index]
