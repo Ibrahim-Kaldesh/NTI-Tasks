@@ -44,26 +44,25 @@ const destrucObject = function (user) {
     Email: email,
     Phone: phone,
     Website: website,
-    Suite: suite,
+    Address: `${suite} - ${street} st.`,
+    // Suite: suite,
+    // street: street,
     City: city,
-    street: street,
     "Zip Code": zipcode,
     Geo: `Lat: ${lat} Lng: ${lng}`,
     Company: companyName,
-    catchPhrase: catchPhrase,
-    bs: bs,
+    CatchPhrase: catchPhrase,
+    BS: bs,
   };
 };
 
 // create a header for our table
 const createTableHeader = function (data) {
-  if (tableHeader) {
-    for (key in data) {
-      tableHeader.insertAdjacentHTML(
-        "beforeend",
-        `<th scope="col">${key}</th>`
-      );
-    }
+  for (key in data) {
+    tableHeader.insertAdjacentHTML(
+      "beforeend",
+      `<th scope="col">${key !== "ID" ? key : "#" + key}</th>`
+    );
   }
 };
 
@@ -76,16 +75,10 @@ const creatUser = function (user) {
     cell.textContent = `${val}`;
     row.appendChild(cell);
   }
-  if (tableBody) tableBody.appendChild(row);
+  tableBody.appendChild(row);
 };
 
-if (allUsers) {
-  allUsers.addEventListener("click", function () {
-    window.location = "table.html";
-  });
-}
-
-// create a list of users for the fetched data
+// create a list of users from the fetched data
 (async function () {
   let data;
   try {
@@ -94,14 +87,33 @@ if (allUsers) {
     console.log(err);
   }
 
-  // now data is available , we can show users in the page
-
-  // create a header for our table
-  createTableHeader(destrucObject(data[0]));
-
-  // loop for all users
-  data.forEach((user) => {
-    // create User and insert it into table
-    creatUser(user);
-  });
+  // now data is available , we can store it in local storage and show users in the page
+  localStorage.setItem("AllUsers", JSON.stringify(data));
 })();
+
+// check if in index.html page then we can addEventListener to (showAll) -> button
+if (allUsers) {
+  allUsers.addEventListener("click", function () {
+    window.location = "table.html";
+  });
+}
+
+// check if in table.html page then we can showAll users
+if (tableHeader && tableBody) {
+  // get data from localStorage
+  const data = localStorage.getItem("AllUsers");
+
+  // check if data exists
+  if (data !== "undefined") {
+    const allUsers = JSON.parse(data);
+
+    // create a header for our table
+    createTableHeader(destrucObject(allUsers[0]));
+
+    // loop for all users
+    allUsers.forEach((user) => {
+      // create User and insert it into table
+      creatUser(user);
+    });
+  } else tableBody.insertAdjacentHTML("beforeend", "<tr>no users yet</tr>");
+}
