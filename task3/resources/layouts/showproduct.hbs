@@ -1,0 +1,31 @@
+<div class="col-4 my-4" style="width:600px">
+        <div class="card">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{name}}</h5>
+            <h6 class="card-text">{{id}}</h5>
+            <p class="card-text">{{description}}</p>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><del><h5>{{price-be}}$</h5></del></li>
+            <li class="list-group-item"><h5>{{price-af}}$</h5></li>
+            {{#if active}}
+              <li class="list-group-item" style="color:green;"><b>Active</b></li>
+              {{else}}
+              <li class="list-group-item" style="color:red;"><b>Inactive</b></li>
+            {{/if}}
+          </ul>
+          <div class="card-body">
+            <a href="/show/{{id}}" class="card-link btn btn-outline-info">Show</a>
+            <a href="/edit/{{id}}" class="card-link btn btn-outline-success">Edit</a>
+            <a href="/delete/{{id}}" class="card-link btn btn-outline-danger">Delete</a>
+          </div>
+          <div class="card-body list-group-item">
+            {{#if active}}
+              <a href="/deactivate/{{id}}" class="card-link btn btn-success">deactivate</a>
+              {{else}}
+              <a href="/activate/{{id}}" class="card-link btn btn-danger">activate</a>
+            {{/if}}
+          </div>
+        </div>
+      </div>
