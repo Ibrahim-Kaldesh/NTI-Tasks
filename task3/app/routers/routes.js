@@ -35,4 +35,6 @@ router.get("/delete/:procuctID", Procucts.delete);
 // search by parcode or by product name
 router.get("/", Procucts.showHome);
 
+router.get("*", Procucts.error);
+
 module.exports = router;

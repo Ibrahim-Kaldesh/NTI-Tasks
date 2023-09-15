@@ -1,29 +1,27 @@
 const handle = require("../helper/dealWithJson");
 
+const search = function (req, allProducts) {
+  const val = req.query.search;
+  let filteredProducts = [];
+  if (val) {
+    filteredProducts = allProducts.filter(
+      (p) => p.name.toLowerCase().includes(val.toLowerCase()) || p.id == val
+    );
+  }
+  return { val, filteredProducts, hasProducts: filteredProducts.length };
+};
+
 class Procucts {
   // show home page
   static showHome(req, res) {
-    const val = req.query.search;
-    if (val) {
-      const allProducts = handle.readFromJson();
-      let filteredProducts = allProducts.filter((pro) =>
-        pro.name.includes(val)
-      );
-
-      if (!filteredProducts.length) {
-        filteredProducts = allProducts.filter((pro) => {
-          console.log(pro.id, val);
-          pro.id == val;
-        });
-      }
-      res.render("home", {
-        pageTitle: "Home",
-        filteredProducts,
-        hasProducts: filteredProducts.length,
-        val,
-      });
-      res.render("home", { val });
-    }
+    const allProducts = handle.readFromJson();
+    const { val, filteredProducts, hasProducts } = search(req, allProducts);
+    res.render("home", {
+      pageTitle: "Home",
+      filteredProducts,
+      val,
+      hasProducts,
+    });
   }
 
   // add new product
@@ -38,7 +36,7 @@ class Procucts {
     product.active = +product.status;
     allProducts.push(product);
     handle.writeToJson(allProducts);
-    res.redirect("/show-all");
+    res.redirect("/add");
   }
 
   // show single product
@@ -54,17 +52,23 @@ class Procucts {
 
   // show allproducts
   static showAll(req, res) {
-    const allProducts = handle.readFromJson();
-    res.render("show-all", {
+    let allProducts = handle.readFromJson();
+    const { val, filteredProducts } = search(req, allProducts);
+    allProducts = val !== undefined ? filteredProducts : allProducts;
+    const renderObj = {
       pageTitle: "All products",
       allProducts,
       hasProducts: allProducts.length,
-    });
+    };
+
+    res.render("show-all", renderObj);
   }
 
   // show active products
   static showActive(req, res) {
-    const activeProducts = handle.readFromJson().filter((p) => p.active);
+    let activeProducts = handle.readFromJson().filter((p) => p.active);
+    const { val, filteredProducts } = search(req, activeProducts);
+    activeProducts = val ? filteredProducts : activeProducts;
     res.render("active", {
       pageTitle: "active - products",
       activeProducts,
@@ -74,7 +78,9 @@ class Procucts {
 
   // show inactive products
   static showInactive(req, res) {
-    const inactiveProducts = handle.readFromJson().filter((p) => !p.active);
+    let inactiveProducts = handle.readFromJson().filter((p) => !p.active);
+    const { val, filteredProducts } = search(req, inactiveProducts);
+    inactiveProducts = val ? filteredProducts : inactiveProducts;
     res.render("inactive", {
       pageTitle: "inactive - products",
       inactiveProducts,
@@ -98,7 +104,7 @@ class Procucts {
     allProducts[idx] = { id, ...req.body };
     allProducts[idx].active = +allProducts[idx].status;
     handle.writeToJson(allProducts);
-    res.redirect("/show-all");
+    res.redirect(`/show/${id}`);
   }
 
   // delete a product
@@ -119,7 +125,7 @@ class Procucts {
     allProducts[idx].status = "1";
     allProducts[idx].active = 1;
     handle.writeToJson(allProducts);
-    res.redirect("/active");
+    res.redirect(`/show/${id}`);
   }
 
   // deactivate a product
@@ -130,11 +136,13 @@ class Procucts {
     allProducts[idx].status = "0";
     allProducts[idx].active = 0;
     handle.writeToJson(allProducts);
-    res.redirect("/inactive");
+    res.redirect(`/show/${id}`);
   }
 
   // show page error
-  static error(req, res) {}
+  static error(req, res) {
+    res.render("error");
+  }
 }
 
 module.exports = Procucts;
