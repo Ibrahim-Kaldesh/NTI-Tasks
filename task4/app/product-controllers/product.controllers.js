@@ -1,13 +1,13 @@
 const Product = require("../DB/models/product.models");
 
-const search = async function (req, status = "") {
+const search = async function (req, status = undefined) {
   const val = req.query.search;
   let filteredProducts = [];
   if (val) {
     // search by name
     try {
       switch (status) {
-        case "":
+        case undefined:
           filteredProducts = await Product.find({ name: new RegExp(val, "i") });
           break;
         case "a":
@@ -26,7 +26,7 @@ const search = async function (req, status = "") {
       // search by parcode
       if (!filteredProducts.length) {
         switch (status) {
-          case "":
+          case undefined:
             filteredProducts = await Product.find({ _id: val });
             break;
           case "a":
@@ -92,7 +92,12 @@ class Procucts {
   // show allproducts
   static async showAll(req, res) {
     try {
-      let allProducts = await Product.find();
+      let allProducts = [];
+      try {
+        allProducts = await Product.find();
+      } catch (e) {
+        res.send(e);
+      }
       const { val, filteredProducts } = await search(req);
       allProducts = val !== undefined ? filteredProducts : allProducts;
       const renderObj = {
@@ -109,8 +114,13 @@ class Procucts {
   // show active products
   static async showActive(req, res) {
     try {
-      let activeProducts = await Product.find({ status: true });
-      const { val, filteredProducts } = search(req, "a");
+      let activeProducts = [];
+      try {
+        activeProducts = await Product.find({ status: true });
+      } catch (e) {
+        res.send(e);
+      }
+      const { val, filteredProducts } = await search(req, "a");
       activeProducts = val ? filteredProducts : activeProducts;
       res.render("active", {
         pageTitle: "active - products",
@@ -118,14 +128,19 @@ class Procucts {
         hasProducts: activeProducts.length,
       });
     } catch (e) {
-      res.send(e);
+      res.send(1);
     }
   }
 
   // show active products
   static async showInactive(req, res) {
     try {
-      let inActiveProducts = await Product.find({ status: false });
+      let inActiveProducts = [];
+      try {
+        inActiveProducts = await Product.find({ status: false });
+      } catch (e) {
+        res.send(e);
+      }
       const { val, filteredProducts } = await search(req, "i");
       inActiveProducts = val ? filteredProducts : inActiveProducts;
       res.render("inactive", {
