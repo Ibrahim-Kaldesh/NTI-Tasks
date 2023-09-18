@@ -167,17 +167,17 @@ class Procucts {
 
   // handle logic of edit a product
   static async editLogic(req, res) {
-    const data = req.body;
     try {
-      await Product.findByIdAndUpdate(req.params.productID, req.body);
+      await Product.findByIdAndUpdate(req.params.productID, req.body, {
+        runValidators: true,
+      });
       res.redirect(`/show/${req.params.productID}`);
     } catch (e) {
-      res.send(e);
-      // res.render("edit", {
-      //   errors: e.errors,
-      //   pageTtile: "edit-Error",
-      //   productData: req.body,
-      // });
+      res.render("edit", {
+        errors: e.errors,
+        pageTtile: "edit-Error",
+        productData: { ...req.body, _id: req.params.productID },
+      });
     }
   }
 
