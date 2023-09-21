@@ -1,0 +1,17 @@
+{{>navbar}}
+    <section class="container">
+    {{#if hasProducts}}
+      <div class="row jsutify-content-center">
+        {{#each inactiveProducts}}
+          {{>showproduct}}
+        {{/each}}
+      </div>
+      {{else}}
+        <div class="row jsutify-content-center">
+          <div class="col-12 my-5">
+            <h2>No Available Products</h2>
+          </div>
+        </div>
+    {{/if}}
+  </section>
+{{>footer}}

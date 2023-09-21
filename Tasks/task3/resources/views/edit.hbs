@@ -1,0 +1,61 @@
+{{>navbar}}
+<section class="container">
+  <div class="row my-4">
+    <div class="col-12">
+      <form method="post">
+        <div class="form-group">
+          <label for="id">Parcode</label>
+          <input name = "id" type="number" class="form-control" id="id" value="{{productData.id}}" disabled>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input name = "name" type="text" class="form-control" id="name" placeholder="Enter name" value="{{productData.name}}">
+        </div>
+        <div class="form-group">
+          <label for="price-be">Price before</label>
+          <input name = "price-be" type="number" class="form-control" id="price-be" placeholder="price before dicount" value="{{productData.price-be}}">
+        </div>
+        <div class="form-group">
+          <label for="price-af">Price after</label>
+          <input name = "price-af" type="number" class="form-control" id="price-af" placeholder="price after dicount" value="{{productData.price-af}}">
+        </div>
+        <div class="form-group">
+          <label for="description">Description for a product</label>
+          <textarea name = "description" class="form-control" id="description" rows="3" placeholder="enter a brief description">{{productData.description}}</textarea>
+        </div>
+        {{#if productData.active}}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="inactive" value="0">
+            <label class="form-check-label" for="inactive">
+              inactive
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="active" value="1" checked>
+            <label class="form-check-label" for="active">
+              active
+            </label>
+          </div>
+          {{else}}
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="inactive" value="0" checked>
+            <label class="form-check-label" for="inactive">
+              inactive
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="status" id="active" value="1">
+            <label class="form-check-label" for="active">
+              active
+            </label>
+          </div>
+        {{/if}}
+          <div class="my-3">
+            <button type="submit" class="btn btn-primary">Edit</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</section>
+{{>footer}}

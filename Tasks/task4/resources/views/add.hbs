@@ -1,0 +1,54 @@
+{{>navbar}}
+</nav>
+<section class="container">
+  <div class="row my-4">
+    <div class="col-12">
+      <form method="post">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input name = "name" type="text" class="form-control" id="name" placeholder="Enter name" value="{{productData.name}}">
+        </div>
+        {{#if errors.name}}
+        <div class="alert alert-danger">{{errors.name.message}}</div>
+        {{/if}}
+        <div class="form-group">
+          <label for="price-be">Price before</label>
+          <input name = "price-be" type="number" class="form-control" id="price-be" placeholder="price before dicount" value="{{productData.price-be}}">
+        </div>
+        {{#if errors.price-be}}
+        <div class="alert alert-danger">{{errors.price-be.message}}</div>
+        {{/if}}
+        <div class="form-group">
+          <label for="price-af">Price after</label>
+          <input name = "price-af" type="number" class="form-control" id="price-af" placeholder="price after dicount" value="{{productData.price-af}}">
+        </div>
+        {{#if errors.price-af}}
+        <div class="alert alert-danger">{{errors.price-af.message}}</div>
+        {{/if}}
+        <div class="form-group">
+          <label for="description">Description for a product</label>
+          <textarea name = "description" class="form-control" id="description" rows="3" placeholder="enter a brief description">{{productData.description}}</textarea>
+        </div>
+        {{#if errors.description}}
+        <div class="alert alert-danger">{{errors.description.message}}</div>
+        {{/if}}
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status" id="inactive" value="0" checked>
+          <label class="form-check-label" for="inactive">
+            inactive
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status" id="ative" value="1">
+          <label class="form-check-label" for="ative">
+            active
+          </label>
+        </div>
+        <div class="my-3">
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+{{>footer}}
